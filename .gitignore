@@ -1,0 +1,4 @@
+/node_modules
+*.filled.yaml
+/kube.json
+/namespaces
