@@ -1,5 +1,4 @@
 import { Config, getConfig } from './config';
-import { k8sApi } from './k8s';
 import { AutoscalerModule } from './modules/autoscaler';
 import { DashboardModule } from './modules/dashboard';
 import { DnsModule } from './modules/dns';
@@ -18,23 +17,9 @@ const setupCluster = async (config: Config) => {
   await createKeyPair(keyLocation, 'admin@' + config.name);
 
   await createCluster({
-    name: config.name,
-    region: config.region,
-    nodesMin: config.nodesMin,
-    nodesMax: config.nodesMax,
+    ...config,
     sshPublicKey: keyLocation + '.pub',
   });
-
-  const { body: nodes } = await k8sApi.listNode();
-  console.log(nodes);
-
-  for (const name of config.modules) {
-    const module = modules.find(m => m.name === name);
-    if (!module) {
-      throw new Error(`Module "${name}" not found in available modules.`);
-    }
-    await module.install(config);
-  }
 };
 
 const install = async (config: Config, moduleNames: string[]) => {
@@ -82,7 +67,7 @@ const start = async () => {
       await install(config, modules);
       break;
     default:
-      const executed = await runModule(config, args[1], args.slice(2));
+      const executed = await runModule(config, args[0], args.slice(1));
       if (executed) {
         return;
       }

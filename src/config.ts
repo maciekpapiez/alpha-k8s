@@ -10,7 +10,6 @@ export interface Config {
   nodesMin: number;
   nodesMax: number;
   domain?: string;
-  modules?: string[];
 }
 
 export const getConfig = async (configPath: string): Promise<Config> => {
@@ -26,9 +25,6 @@ export const getConfig = async (configPath: string): Promise<Config> => {
   requireField('region');
   requireField('nodesMin');
   requireField('nodesMax');
-  if (!config.modules) {
-    config.modules = [];
-  }
 
   return config;
 };

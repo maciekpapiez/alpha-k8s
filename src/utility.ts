@@ -23,7 +23,7 @@ export const run = (command: string, silent?: boolean): Promise<string> => new P
 
 export const createKeyPair = (path: string, name: string) => run(
   `ssh-keygen -t rsa -b 4096 -C '${name}' -f '${path}'`,
-  true
+  false
 );
 
 export const createCluster = (options: {
@@ -40,9 +40,7 @@ export const createCluster = (options: {
   --nodes-max=${options.nodesMax}
   --ssh-access
   --ssh-public-key=${options.sshPublicKey}
-`);
-
-export const getNodes = () => run('eksctl get nodes');
+`.replace(/\n/g, ''));
 
 export const applyFile = (file: string) => run(`kubectl apply -f '${file}'`);
 export const applyFiles = async (files: string[]) => {

@@ -19,17 +19,12 @@ Currently the code is a huge mess, it may not work under not-exactly-as-on-my-pl
       "region": "eu-west-1",
       "nodesMin": 2,
       "nodesMax": 5,
-      "domain": "h1.com",
-      "install": [
-        "dashboard",
-        "autoscaler",
-        "dns"
-      ]
+      "domain": "h1.com"
     }
     ```
 3. Set correct AWS credentials with `aws configure`
-4. Run `yarn setup`. Wait 5-15 minutes. Eksctl will do it's magic. Then `alpha-k8s` will take over and install all "modules" listed in `"install"` array in `kube.json`. Each "module" sets up necessary permissions and all the crap that you don't want to touch yourself.
-5. Optionally, run `yarn start install [module1] [module2]` if you want to install something that you forgot to include in `kube.json`.
+4. Run `yarn setup`. Wait 5-15 minutes. Eksctl will do it's magic.
+5. Optionally, run `yarn start install [module1] [module2]` if you want to install things such as "dashboard", "autoscaler", "dns" automatically.
 6. Run `yarn create-namespace [namespace-name]`. This will create a namespace in your cluster, set up AWS roles, policies and users, K8s roles, groups and role bindings, proper K8s configuration files and AWS access keys for namespace admins and CI (deployments).
 7. Access the cluster namespace with newly created resources: Go to newly created folder `./namespaces/[namespace-name]` to find the credentials. You can do `export AWS_ACCESS_KEY_ID=... AWS_SECRET_ACCESS_KEY=... KUBEFILE=./namespaces/[namespace-name]/admin.config.yaml` and manage your namespace using `kubectl` commands from now on.
 
