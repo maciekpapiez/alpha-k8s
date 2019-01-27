@@ -22,9 +22,15 @@ export const createNamespace = new CommandBuilder()
         description: 'The name of K8S cluster\'s namespace',
         cli: 'namespaceName',
       })
+      .add('region', {
+        type: Types.string,
+        required: true,
+        description: 'Cluster AWS region',
+        cli: 'region',
+      })
       .build()
   )
-  .execute(async ({ namespaceName, clusterName }, revertStack) => {
+  .execute(async ({ namespaceName, clusterName, region }, revertStack) => {
     if (!namespaceName || !namespaceName.match(/^[a-z][a-z0-9\-]*$/i)) {
       throw new Error(`Namespace name is invalid: ${namespaceName}`);
     }
@@ -48,6 +54,7 @@ export const createNamespace = new CommandBuilder()
     await createNamespaceUser.exec({
       namespaceName,
       clusterName,
+      region,
       suffix: 'admin',
       addDefaultUser: false,
       rbacRules: [
@@ -67,6 +74,7 @@ export const createNamespace = new CommandBuilder()
     await createNamespaceUser.exec({
       namespaceName,
       clusterName,
+      region,
       addDefaultUser: true,
       suffix: 'deployments',
       rbacRules: [
